@@ -8,7 +8,6 @@ import net.api.cho.stockdata.stock.Wallet.Domain.Wallet;
 import net.api.cho.stockdata.stock.Wallet.Dto.KlayDto;
 import net.api.cho.stockdata.stock.Wallet.Dto.UserDto;
 import net.api.cho.stockdata.stock.Wallet.Dto.WalletDto;
-import net.api.cho.stockdata.stock.Wallet.Repository.WalletRepository;
 import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Service;
 
@@ -20,13 +19,12 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class WalletServiceImpl implements WalletService{
     private final WalletApi wallet;
-    private final WalletRepository walletRepository;
     private final SendKlay sendKlay;
     private final FeignController feignController;
 
     @Override
     public Object CheckWallet() throws IOException {
-         return wallet.CheckWallet();
+        return wallet.CheckWallet();
     }
 
     @Override

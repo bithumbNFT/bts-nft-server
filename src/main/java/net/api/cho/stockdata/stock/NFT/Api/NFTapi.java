@@ -36,7 +36,7 @@ public class NFTapi {
         headers.set("x-chain-id", chain_id);
         headers.set("Authorization", Auth);
         headers.setContentType(MediaType.APPLICATION_JSON);
-        String NFTid = changeNumber(makeNFT.getNO()*Math.pow(10,5));
+        String NFTid = changeNumber(makeNFT.getNO()*Math.pow(10,6));
         makeNFT.setId(NFTid);
         HashMap<String,String> findowner = feignController.getaddressByUserId(makeNFT.getOwner());
         JSONObject request = new JSONObject();
@@ -63,9 +63,9 @@ public class NFTapi {
                 feignController.saveNFT(selectUser);
             });
         }
-            return status;
+        return status;
     }
-//    public Object checkNFT(String account) throws ParseException{
+    //    public Object checkNFT(String account) throws ParseException{
 //        final HttpHeaders headers = new HttpHeaders();
 //        headers.set("x-chain-id", chain_id);
 //        headers.set("Authorization", Auth);

@@ -16,10 +16,11 @@ public interface NFTService {
     List<HashMap<String,String>> checkNFT(String id) throws IOException,ParseException;
     HashMap<String,String> sendNFT(NFTdto NFTdto) throws ParseException;
     HashMap<String,String> findByid(String id);
-    List<HashMap<String,String>> allNFT() throws IOException;
+    List<HashMap<String,String>> allNFT();
     HashMap<String,String> likeNFT(Likedto likedto);
     List<HashMap<String,String>> likelist(String user) throws IOException;
     HashMap<String,String> deletelike(Likedto likedto);
     HashMap<String,Integer> countlike(String nft);
     HashMap<String,String> deleteNFT(Deletedto deletedto) throws ParseException;
+    List<HashMap<String,String>> findNFT(String keyword);
 }

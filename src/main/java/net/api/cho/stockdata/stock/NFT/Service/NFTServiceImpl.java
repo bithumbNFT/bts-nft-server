@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.swing.text.html.Option;
 import java.io.IOException;
 import java.util.*;
 
@@ -33,7 +34,7 @@ public class NFTServiceImpl implements NFTService {
     public HashMap<String,String> makeNFT(MakeNFTdto makeNFTdto, MultipartFile file) throws IOException, ParseException{
         String imagepath = s3uploader.upload(file,"static");
         MakeNFT insertNFT = MakeNFT.builder().description(makeNFTdto.getDescription()).image(makeNFTdto.getImage())
-                        .owner(makeNFTdto.getOwner()).name(makeNFTdto.getName()).imagepath(imagepath).build();
+                .owner(makeNFTdto.getOwner()).name(makeNFTdto.getName()).imagepath(imagepath).build();
         nftRepository.save(insertNFT);
         HashMap<String,String> result = new HashMap<>();
         String set = NFTapi.makeNFT(insertNFT);
@@ -98,8 +99,9 @@ public class NFTServiceImpl implements NFTService {
         return result;
     }
     @Override
-    public List<HashMap<String,String>> allNFT() throws IOException{
-        List<HashMap<String,Object>> nfts = feignController.findNftAll();
+    public List<HashMap<String,String>> allNFT(){
+        Optional<List<HashMap<String,Object>>> receive = Optional.ofNullable(feignController.findNftAll());
+        List<HashMap<String,Object>> nfts = receive.get();
         List<HashMap<String,String>> output = new ArrayList<>();
         for(int i=0; i<nfts.size();i++)
         {
@@ -178,4 +180,33 @@ public class NFTServiceImpl implements NFTService {
         return result;
     }
 
+    @Override
+    public List<HashMap<String, String>> findNFT(String keyword) {
+        Optional<List<HashMap<String,Object>>> receive = Optional.ofNullable(feignController.findNftAll());
+        List<HashMap<String,Object>> nfts = receive.get();
+        List<HashMap<String,String>> output = new ArrayList<>();
+        for(int i=0; i<nfts.size();i++)
+        {
+            HashMap<String,String> result = new HashMap<>();
+            Object in = nfts.get(i).get("userId");
+            Map userId = mapper.convertValue(in,Map.class);
+            if(nfts.get(i).get("name").toString().indexOf(keyword)!=-1)
+            {
+                result.put("id",nfts.get(i).get("id").toString());
+                result.put("name",nfts.get(i).get("name").toString());
+                result.put("description",nfts.get(i).get("description").toString());
+                result.put("image",nfts.get(i).get("image").toString());
+                result.put("imagepath",nfts.get(i).get("imagepath").toString());
+                result.put("email",userId.get("email").toString());
+                result.put("username",userId.get("name").toString());
+            }
+            else
+            {
+                continue;
+            }
+            output.add(result);
+            System.out.println(result);
+        }
+        return output;
+    }
 }

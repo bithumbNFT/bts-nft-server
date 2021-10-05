@@ -28,7 +28,7 @@ public class NFTController {
 
     @PostMapping("/makeNFT")
     public ResponseEntity<HashMap<String,String>> makeNFT(@RequestPart(value = "NFTInfo") MakeNFTdto makeNFTdto,
-                                  @RequestPart(value = "image") MultipartFile file) throws IOException, ParseException {
+                                                          @RequestPart(value = "image") MultipartFile file) throws IOException, ParseException {
         return ResponseEntity.ok(nftService.makeNFT(makeNFTdto,file));
     }
     @GetMapping("/checkNftbyid/{id}")
@@ -54,6 +54,10 @@ public class NFTController {
     @PostMapping("/likeNFT")
     public ResponseEntity<HashMap<String,String>> likeNFT(@RequestBody Likedto likedto) throws ParseException{
         return ResponseEntity.ok(nftService.likeNFT(likedto));
+    }
+    @GetMapping("/findNFT/{keyword}")
+    public ResponseEntity<List<HashMap<String,String>>> findNFT(@PathVariable String keyword) {
+        return ResponseEntity.ok(nftService.findNFT(keyword));
     }
     @DeleteMapping("/likeNFT")
     public ResponseEntity<HashMap<String,String>> deletelike(@RequestBody Likedto likedto){

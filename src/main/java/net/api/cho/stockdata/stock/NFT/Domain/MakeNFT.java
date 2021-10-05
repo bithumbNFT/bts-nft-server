@@ -9,7 +9,7 @@ import java.util.Date;
 
 @Data
 @Entity
-@Table(name = "NFT")
+@Table(name = "NFTLOG")
 @NoArgsConstructor
 public class MakeNFT {
     @Id
