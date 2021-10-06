@@ -1,6 +1,6 @@
 # ✨ BTS (Bithumb NTF SNS) 💰
 
-## 담당자 백인준
+## 담당자 조원희
 
 ## 👉 프로젝트 소개
 
@@ -15,7 +15,7 @@
 
 | 프레임워크     | <img src="https://img.shields.io/badge/Spring Boot-6DB33F?style=flat-square&logo=SpringBoot&logoColor=white"/>
                                                                                                       
-| MSA 연결       |# ✨ BTS (Bithumb NTF SNS) 💰
+| MSA 연결       |# ✨ BTS (Bithumb NFT SNS) 💰
 
 ## 👉 프로젝트 소개
 
