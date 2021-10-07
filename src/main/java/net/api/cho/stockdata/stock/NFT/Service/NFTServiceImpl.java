@@ -34,24 +34,26 @@ public class NFTServiceImpl implements NFTService {
     public HashMap<String,String> makeNFT(MakeNFTdto makeNFTdto, MultipartFile file) throws IOException, ParseException{
         String imagepath = s3uploader.upload(file,"static");
         MakeNFT insertNFT = MakeNFT.builder().description(makeNFTdto.getDescription()).image(makeNFTdto.getImage())
-                .owner(makeNFTdto.getOwner()).name(makeNFTdto.getName()).imagepath(imagepath).build();
+                .owner(makeNFTdto.getOwner()).name(makeNFTdto.getName()).imagepath(imagepath)
+                .auction(makeNFTdto.getAuction()).price(makeNFTdto.getPrice()).build();
         nftRepository.save(insertNFT);
         HashMap<String,String> result = new HashMap<>();
-        String set = NFTapi.makeNFT(insertNFT);
-        if(set.equals("Submitted")){
-            result.put("status","OK");
+        HashMap<String, String> set = NFTapi.makeNFT(insertNFT);
+        if(set.get("status").equals("Submitted")){
+            return set;
         }
-        else
-            result.put("status","Fail");
-        return result;
+        else {
+            result.put("status", "Fail");
+            return result;
+        }
     }
     @Override
     public List<HashMap<String,String>> checkNFT(String id) throws IOException{
         List<HashMap<String,Object>> obj = feignController.findNft(id);
-        HashMap<String,String> result = new HashMap<>();
         List<HashMap<String,String>> output = new ArrayList<>();
         for(int i=0; i<obj.size();i++)
         {
+            HashMap<String,String> result = new HashMap<>();
             Object in = obj.get(i).get("userId");
             Map userId = mapper.convertValue(in,Map.class);
             result.put("id",obj.get(i).get("id").toString());
@@ -96,6 +98,8 @@ public class NFTServiceImpl implements NFTService {
         result.put("imagepath",nft.get(0).get("imagepath").toString());
         result.put("email",userId.get("email").toString());
         result.put("username",userId.get("name").toString());
+        result.put("auction",nft.get(0).get("auction").toString());
+        result.put("price",nft.get(0).get("price").toString());
         return result;
     }
     @Override

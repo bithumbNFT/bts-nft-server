@@ -10,4 +10,6 @@ public class MakeNFTdto {
     private String description;
     private String image;
     private String owner;
+    private Auction auction;
+    private String price;
 }

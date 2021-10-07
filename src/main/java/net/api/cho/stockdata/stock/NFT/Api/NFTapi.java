@@ -31,7 +31,7 @@ public class NFTapi {
     private final String CheckURL = "https://kip17-api.klaytnapi.com/v1/contract/"+address_alias+"/owner/";
 
 
-    public String makeNFT(MakeNFT makeNFT) throws ParseException {
+    public HashMap<String, String> makeNFT(MakeNFT makeNFT) throws ParseException {
         final HttpHeaders headers = new HttpHeaders();
         headers.set("x-chain-id", chain_id);
         headers.set("Authorization", Auth);
@@ -48,7 +48,15 @@ public class NFTapi {
         String jText = response.getBody().toString();
         JSONParser parser = new JSONParser();
         JSONObject obj = (JSONObject) parser.parse(jText);
-        String status = obj.get("status").toString();
+        HashMap<String,String> result = new HashMap<>();
+        result.put("status",obj.get("status").toString());
+        result.put("id",NFTid);
+        result.put("image",makeNFT.getImage());
+        result.put("imagepath",makeNFT.getImagepath());
+        result.put("name",makeNFT.getName());
+        result.put("description",makeNFT.getDescription());
+        result.put("auction",makeNFT.getAuction().toString());
+        result.put("price",makeNFT.getPrice());
         if(obj.get("status").equals("Submitted")){
             Optional<MakeNFT> update = nftRepository.findByNO(makeNFT.getNO());
             update.ifPresent(selectUser -> {
@@ -59,11 +67,13 @@ public class NFTapi {
                 selectUser.setImage(makeNFT.getImage());
                 selectUser.setOwner(makeNFT.getOwner());
                 selectUser.setImagepath(makeNFT.getImagepath());
+                selectUser.setAuction(makeNFT.getAuction());
+                selectUser.setPrice(makeNFT.getPrice());
                 selectUser.setDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
                 feignController.saveNFT(selectUser);
             });
         }
-        return status;
+        return result;
     }
     //    public Object checkNFT(String account) throws ParseException{
 //        final HttpHeaders headers = new HttpHeaders();

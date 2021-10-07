@@ -28,11 +28,15 @@ public class MakeNFT {
     private String owner;
     @Column(name = "Date")
     private String date;
+    @Column(name = "Auction")
+    private Auction auction;
+    @Column(name = "startprice")
+    private String price;
     @Column(name = "imagepath")
     private String imagepath;
 
     @Builder
-    public MakeNFT( String id, String name, String image,String description, String owner, String imagepath)
+    public MakeNFT( String id, String name, String image,String description, String owner, String imagepath,Auction auction, String price)
     {
         this.id= id;
         this.name = name;
@@ -40,6 +44,8 @@ public class MakeNFT {
         this.description = description;
         this.owner = owner;
         this.imagepath = imagepath;
+        this.auction = auction;
+        this.price = price;
     }
 
 }
