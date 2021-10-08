@@ -133,10 +133,10 @@ public class NFTServiceImpl implements NFTService {
     @Override
     public List<HashMap<String,String>> likelist(String user) throws IOException{
         List<HashMap<String,Object>> likelist = feignController.likelist(user);
-        HashMap<String,String> result = new HashMap<>();
         List<HashMap<String,String>> output = new ArrayList<>();
         for(int i=0; i<likelist.size();i++)
         {
+            HashMap<String,String> result = new HashMap<>();
             Object userinfo = likelist.get(i).get("userId");
             Map userId = mapper.convertValue(userinfo, Map.class);
             Object nftinfo = likelist.get(i).get("no");
