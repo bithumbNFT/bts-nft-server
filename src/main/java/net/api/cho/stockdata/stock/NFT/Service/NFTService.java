@@ -23,4 +23,6 @@ public interface NFTService {
     HashMap<String,Integer> countlike(String nft);
     HashMap<String,String> deleteNFT(Deletedto deletedto) throws ParseException;
     List<HashMap<String,String>> findNFT(String keyword);
+    HashMap<String,String> auction(String id);
+    HashMap<String,String> exchange(FinishDto finishDto) throws ParseException;
 }

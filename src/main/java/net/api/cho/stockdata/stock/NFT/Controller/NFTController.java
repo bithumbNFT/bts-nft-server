@@ -55,6 +55,10 @@ public class NFTController {
     public ResponseEntity<HashMap<String,String>> likeNFT(@RequestBody Likedto likedto) throws ParseException{
         return ResponseEntity.ok(nftService.likeNFT(likedto));
     }
+    @PostMapping("/auction/{id}")
+    public ResponseEntity<HashMap<String,String>> auctionstart(@PathVariable String id){
+        return ResponseEntity.ok(nftService.auction(id));
+    }
     @GetMapping("/findNFT/{keyword}")
     public ResponseEntity<List<HashMap<String,String>>> findNFT(@PathVariable String keyword) {
         return ResponseEntity.ok(nftService.findNFT(keyword));
@@ -70,5 +74,9 @@ public class NFTController {
     @GetMapping("/countlike/{Nft}")
     public ResponseEntity<HashMap<String,Integer>> likecount(@PathVariable String Nft){
         return ResponseEntity.ok(nftService.countlike(Nft));
+    }
+    @PostMapping("auction/finish")
+    public ResponseEntity<HashMap<String,String>> exchangenft(@RequestBody FinishDto finishDto) throws ParseException{
+        return ResponseEntity.ok(nftService.exchange(finishDto));
     }
 }

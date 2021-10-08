@@ -69,6 +69,7 @@ public class NFTapi {
                 selectUser.setImagepath(makeNFT.getImagepath());
                 selectUser.setAuction(makeNFT.getAuction());
                 selectUser.setPrice(makeNFT.getPrice());
+                selectUser.setTerm(makeNFT.getTerm());
                 selectUser.setDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
                 feignController.saveNFT(selectUser);
             });

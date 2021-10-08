@@ -49,7 +49,7 @@ public class WalletServiceImpl implements WalletService{
     }
 
     @Override
-    public HashMap<String, Boolean> send(KlayDto klayDto) throws ParseException{
+    public HashMap<String, String> send(KlayDto klayDto) throws ParseException{
         String to = feignController.getaddressByUserId(klayDto.getTo()).get("address");
         String from = feignController.getaddressByUserId(klayDto.getFrom()).get("address");
         KlayDto exchange = KlayDto.builder().to(to).from(from).value(klayDto.getValue()).build();

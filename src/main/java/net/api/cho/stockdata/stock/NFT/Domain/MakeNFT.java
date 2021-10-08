@@ -16,27 +16,19 @@ public class MakeNFT {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "NO")
     private Integer NO;
-    @Column(name = "id")
     private String id;
-    @Column(name = "name")
     private String name;
-    @Column(name = "description")
     private String description;
-    @Column(name = "image")
     private String image;
-    @Column(name = "owner")
     private String owner;
-    @Column(name = "Date")
     private String date;
-    @Column(name = "Auction")
     private Auction auction;
     @Column(name = "startprice")
     private String price;
-    @Column(name = "imagepath")
     private String imagepath;
-
+    private Integer term;
     @Builder
-    public MakeNFT( String id, String name, String image,String description, String owner, String imagepath,Auction auction, String price)
+    public MakeNFT( String id, String name, String image,String description, String owner, String imagepath,Auction auction, String price, Integer term)
     {
         this.id= id;
         this.name = name;
@@ -46,6 +38,7 @@ public class MakeNFT {
         this.imagepath = imagepath;
         this.auction = auction;
         this.price = price;
+        this.term = term;
     }
 
 }

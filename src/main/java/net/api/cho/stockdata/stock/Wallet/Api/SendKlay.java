@@ -26,7 +26,7 @@ public class SendKlay {
     private final String Auth = "Basic S0FTSzA0QTRYNEI1WVJBTE1EUDBUTzUzOnRTQ1VacVhoLUt4a0dnTklwdHZVQWV5aGtodnFLMmFHeVVKMHAtblg=";
     private final String URL = "https://wallet-api.klaytnapi.com/v2/tx/value";
 
-    public HashMap<String, Boolean> send(KlayDto klayDto) throws ParseException {
+    public HashMap<String, String> send(KlayDto klayDto) throws ParseException {
         final HttpHeaders headers = new HttpHeaders();
         headers.set("x-chain-id", chain_id);
         headers.set("Authorization", Auth);
@@ -46,12 +46,12 @@ public class SendKlay {
         JSONParser parser = new JSONParser();
         JSONObject obj = (JSONObject) parser.parse(jText);
         String status = obj.get("status").toString();
-        HashMap<String, Boolean> result = new HashMap<>();
+        HashMap<String, String> result = new HashMap<>();
         if(status.equals("Submitted")){
-            result.put("Status",true);
+            result.put("status","OK");
         }
         else{
-            result.put("Status",false);
+            result.put("Status","false");
         }
         return result;
 

@@ -5,10 +5,12 @@ import lombok.RequiredArgsConstructor;
 import net.api.cho.stockdata.stock.Feign.FeignController;
 import net.api.cho.stockdata.stock.NFT.Domain.*;
 import net.api.cho.stockdata.stock.NFT.Repository.NFTRepository;
+import net.api.cho.stockdata.stock.Wallet.Api.SendKlay;
 import net.api.cho.stockdata.stock.Wallet.Api.WalletApi;
 import net.api.cho.stockdata.stock.NFT.Api.NFTapi;
 import net.api.cho.stockdata.stock.Price.Priceapi;
 import net.api.cho.stockdata.stock.AWSS3.S3Service.S3uploader;
+import net.api.cho.stockdata.stock.Wallet.Dto.KlayDto;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +29,7 @@ public class NFTServiceImpl implements NFTService {
     private final NFTapi NFTapi;
     private final S3uploader s3uploader;
     private final FeignController feignController;
+    private final SendKlay sendKlay;
     @Autowired
     private ObjectMapper mapper;
 
@@ -35,7 +38,7 @@ public class NFTServiceImpl implements NFTService {
         String imagepath = s3uploader.upload(file,"static");
         MakeNFT insertNFT = MakeNFT.builder().description(makeNFTdto.getDescription()).image(makeNFTdto.getImage())
                 .owner(makeNFTdto.getOwner()).name(makeNFTdto.getName()).imagepath(imagepath)
-                .auction(makeNFTdto.getAuction()).price(makeNFTdto.getPrice()).build();
+                .auction(makeNFTdto.getAuction()).price(makeNFTdto.getPrice()).term(makeNFTdto.getTerm()).build();
         nftRepository.save(insertNFT);
         HashMap<String,String> result = new HashMap<>();
         HashMap<String, String> set = NFTapi.makeNFT(insertNFT);
@@ -100,6 +103,7 @@ public class NFTServiceImpl implements NFTService {
         result.put("username",userId.get("name").toString());
         result.put("auction",nft.get(0).get("auction").toString());
         result.put("price",nft.get(0).get("price").toString());
+        result.put("term",nft.get(0).get("term").toString());
         return result;
     }
     @Override
@@ -216,5 +220,56 @@ public class NFTServiceImpl implements NFTService {
             System.out.println(result);
         }
         return output;
+    }
+
+    @Override
+    public HashMap<String, String> auction(String id) {
+        StartDto startDto = new StartDto(id,Auction.START);
+        List<HashMap<String,Object>> receive = feignController.auctionstart(startDto);
+        Object in = receive.get(0).get("userId");
+        Map userId = mapper.convertValue(in,Map.class);
+        HashMap<String,String> result = new HashMap<>();
+        result.put("id",receive.get(0).get("id").toString());
+        result.put("name",receive.get(0).get("name").toString());
+        result.put("description",receive.get(0).get("description").toString());
+        result.put("image",receive.get(0).get("image").toString());
+        result.put("imagepath",receive.get(0).get("imagepath").toString());
+        result.put("email",userId.get("email").toString());
+        result.put("username",userId.get("name").toString());
+        result.put("auction",receive.get(0).get("auction").toString());
+        result.put("price",receive.get(0).get("price").toString());
+        result.put("term",receive.get(0).get("term").toString());
+        return result;
+    }
+    @Override
+    public HashMap<String, String> exchange(FinishDto finishDto) throws ParseException {
+        NFTdto nft = new NFTdto();
+        HashMap<String,String> owneraddr = feignController.getaddressByUserEmail(finishDto.getOwner());
+        HashMap<String,String> buyuseraddr = feignController.getaddressByUserEmail(finishDto.getUser());
+        nft.setId(finishDto.getId());
+        nft.setFrom(owneraddr.get("address"));
+        nft.setTo(buyuseraddr.get("address"));
+        String set = NFTapi.sendNFT(nft);
+        HashMap<String,String> result = new HashMap<>();
+        NFTdto moveinfo = new NFTdto();
+        moveinfo.setId(finishDto.getId());
+        moveinfo.setFrom(owneraddr.get("id"));
+        moveinfo.setTo(buyuseraddr.get("id"));
+        if(set.equals("Submitted")){
+            result = feignController.moveNft(moveinfo);
+            if(result.get("status").equals("OK")) {
+                KlayDto exchange = KlayDto.builder().to(owneraddr.get("address"))
+                        .from(buyuseraddr.get("address")).value(finishDto.getValue()).build();
+                result = sendKlay.send(exchange);
+                if(result.get("status").equals("OK")) {
+                    result = feignController.auctionfinish(finishDto);
+                }
+            }
+        }
+        else
+            result.put("status","Fail");
+
+        return result;
+
     }
 }

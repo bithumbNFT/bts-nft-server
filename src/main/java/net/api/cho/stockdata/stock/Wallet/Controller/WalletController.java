@@ -36,7 +36,7 @@ public class WalletController {
         return ResponseEntity.ok(walletService.muchWallet(account));
     }
     @PostMapping("/sendklay")
-    public ResponseEntity<HashMap<String, Boolean>> send(@RequestBody KlayDto klayDto) throws ParseException {
+    public ResponseEntity<HashMap<String, String>> send(@RequestBody KlayDto klayDto) throws ParseException {
         return ResponseEntity.ok(walletService.send(klayDto));
     }
 

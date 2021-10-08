@@ -16,7 +16,7 @@ public interface WalletService {
     Object CheckWallet() throws IOException;
     HashMap<String, String> CreateWallet(String userid) throws IOException;
     HashMap<String, Optional<Double>> muchWallet(String account) throws IOException, ParseException;
-    HashMap<String, Boolean> send(KlayDto klayDto) throws ParseException;
+    HashMap<String, String> send(KlayDto klayDto) throws ParseException;
     HashMap<String, Boolean> findwallet(String email);
 
 }
