@@ -144,10 +144,13 @@ public class NFTServiceImpl implements NFTService {
             Object nftownerinfo = nft.get("userId");
             Map ownerinfo = mapper.convertValue(nftownerinfo,Map.class);
             result.put("userId",userId.get("userId").toString());
-            result.put("nft_id",nft.get("id").toString());
-            result.put("image_path",nft.get("imagepath").toString());
-            result.put("ownerId",ownerinfo.get("name").toString());
-            output.add(result);
+            result.put("id",nft.get("id").toString());
+            result.put("name",nft.get("name").toString());
+            result.put("description",nft.get("description").toString());
+            result.put("image",nft.get("image").toString());
+            result.put("imagepath",nft.get("imagepath").toString());
+            result.put("email",ownerinfo.get("email").toString());
+            result.put("username",ownerinfo.get("name").toString());
         }
         return output;
     }
