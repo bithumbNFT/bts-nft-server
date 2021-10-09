@@ -39,6 +39,9 @@ dependencies {
 	implementation 'org.springframework.cloud:spring-cloud-starter-bus-amqp'
 	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-redis'
 	implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '3.0.4'
+	//loging
+	implementation 'net.logstash.logback:logstash-logback-encoder:5.1'
+	implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-zipkin', version: '2.2.3.RELEASE'
 }
 
 test {
