@@ -154,6 +154,7 @@ public class NFTServiceImpl implements NFTService {
             result.put("description",nft.get("description").toString());
             result.put("image",nft.get("image").toString());
             result.put("imagepath",nft.get("imagepath").toString());
+            result.put("auction",nft.get("auction").toString());
             result.put("email",ownerinfo.get("email").toString());
             result.put("username",ownerinfo.get("name").toString());
             output.add(result);
